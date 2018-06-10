@@ -1,0 +1,9 @@
+the following libraries must be downloaded and (or) built for your system to continue development:
+
+1. rpclib
+	https://github.com/rpclib/rpclib
+
+2. ImGui (no need to build this, just add the files to your project and add the necessary stuff to your compiler/linker)
+	the libraries : GLFW, GL3W are included with the ImGui repo so make sure you also use the examples to get an idea 	of how to use this library (FAQ on the top of the imgui.h/.cpp file )
+	https://github.com/ocornut/imgui
+
