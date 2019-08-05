@@ -1,4 +1,0 @@
-To implement the following :
-
-1. parser
-2. client server communication
