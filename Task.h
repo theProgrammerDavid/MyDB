@@ -14,6 +14,8 @@ public:
 			t.join();
 			//this ensures that join() is the last function that is called
 		}
+
+		
 	}
 	thread_guard(thread_guard const&) = delete;
 	thread_guard& operator=(thread_guard const&) = delete;

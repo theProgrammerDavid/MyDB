@@ -1,62 +1,83 @@
-// var net = require('net');
-
-// var stdin = process.openStdin();
-
-// class MyDB {
-
-//     constructor(_username, _password, _ipaddr, _portno) {
-        
-//         this.username = _username;
-//         this.password = _password;
-//         this.portno = _portno;
-//         this.ipaddr = _ipaddr;
-//         this.stdin = process.openStdin();
-
-//         this.client = new net.Socket();
-
-//         this.client.connect(this.portno, this.ipaddr, function () {
-//             console.log('Connected to ' + this.ipaddr + ' on port ' + this.portno);
-//         });
-
-//        this.client.on('data', function (data) {
-    
-    //             console.log('Received: ' + data);
-    //             //client.destroy(); // kill client after server's response
-    //         });
-    //     }
-    
-    // }
-    
-    //var db = new MyDB('root', 'root', '27015', '127.0.0.1');
-
-
 var net = require('net');
+
 var stdin = process.openStdin();
+/*
+
+
+// Set input character encoding.
+
+// Prompt user to input data in console.
+console.log("Please input text in command line.");
+
+// When user input data and click enter key.
+standard_input.on('data', function (data) {
+
+    // User input exit.
+    if(data === 'exit\n'){
+        // Program exit.
+        console.log("User input complete, program exit.");
+        process.exit();
+    }else
+    {
+        // Print user input in console.
+        console.log('User Input Data : ' + data);
+    }
+});
+
+*/
+var x = {
+    user: 'david',
+    pass: 'lol'
+}
 var client = new net.Socket();
-try {
-    client.connect(27015, '127.0.0.1', function () {
-        console.log('Connected');
-    });
+const readline = require('readline');
 
-}
-catch (e) {
 
-}
-stdin.addListener("data", function (d) {
-    console.log('you entered: ' + d.toString().trim());
-    client.write(d.toString().trim())
-})
+client.connect(27015, '127.0.0.1', function () {
+    console.log('Connected');
 
+
+});
+console.log(JSON.stringify({
+    username: 'david',
+}))
+
+client.on('close', function () {
+    console.log('Connection closed');
+});
+
+
+// client.write(JSON.stringify({
+//     username:'david',
+// }));
+
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
 
 
 client.on('data', function (data) {
-
     console.log('Received: ' + data);
     //client.destroy(); // kill client after server's response
 });
 
 
-client.on('close', function() {
-	console.log('Connection closed');
-});
+while (true) {
+    rl.question('$> ', (answer) => {
+        // TODO: Log the answer in a database
+        client.write(answer.toString().trim());
+    });
+
+}
+
+// stdin.addListener("data", function(d){
+//    // console.log('you entered: '+d.toString().trim());
+//     client.write(d.toString().trim())
+// })
+
+
+
+
 

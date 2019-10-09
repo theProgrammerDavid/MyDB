@@ -1,45 +1,43 @@
-#define _CRT_SECURE_NO_WARNINGS
-
-#pragma comment (lib, "ws2_32.lib")
-
 #include "pch.h"
-#include <stdio.h>
-#include <conio.h>
-#include <iostream>
-#include <thread>
-#include <Windows.h>
 #include "IO.h"
 
-int cnum = 0;
-int myport;
-SOCKADDR_IN sAddr;
 
-
-
-
-void errorBox(char *text)
-{
-	MessageBoxA(NULL, text, "ERROR", MB_OK | MB_ICONERROR);
+ClientSocket::ClientSocket() {
 }
 
-void processClient(SOCKET passdata)
-{
-	int iResult;
-	char recvbuf[512];
+
+void ClientSocket:: processClient(
+#ifdef _WIN32
+	SOCKET passdata, SOCKADDR_IN sAddr
+#elif __linux__
+
+#endif
+	,int cnum
+) {
+
+#ifdef _WIN32
+	//int iResult;
+
+	cnum++;
+
+	//char recvbuf[512];
 	memset(recvbuf, NULL, sizeof(recvbuf));
 	int mynumber = cnum;
 	SOCKET tClient = (SOCKET)passdata;
-	char connectionMSG[52];
+	//char connectionMSG[52];
 	printf(connectionMSG, sizeof(connectionMSG), "Client connected from: %s", inet_ntoa(sAddr.sin_addr));
 	printf("Alert: %s\nClients Connected: %d\n", connectionMSG, cnum);
-	char sendmsg[50];
+	//char sendmsg[50];
 	printf(sendmsg, 50, "PING: Your Client Number is: %d\n", mynumber);
 	int sret;
 	while (true)
 	{
+		
+		std::cout << "y";
+		memset(&recvbuf[0], 0, sizeof(recvbuf));
 
 		iResult = recv(tClient, recvbuf, sizeof(recvbuf), 0);
-		std::cout << "received: " << recvbuf << std::endl;
+		std::cout << "received: " << recvbuf << "|"<<std::endl;
 		sret = send(tClient, recvbuf, sizeof(recvbuf), 0);
 		/* Every five seconds send a ping to the client... */
 		if (sret == ECONNRESET || sret == SOCKET_ERROR)
@@ -51,48 +49,60 @@ void processClient(SOCKET passdata)
 		}
 		//Sleep(5000);
 	}
+#elif __linux__
+
+#endif
+
+
+}
+void IO::errorBox(char * text)
+{
+
+#ifdef _WIN32
+	MessageBoxA(NULL, text, "ERROR", MB_OK | MB_ICONERROR);
+#elif __linux__
+
+#endif // _WIN32
+
 }
 
-void test() {
-	printf("What port: ");
-	scanf("%d", &myport);
-	WSADATA wData;
-	SOCKET tmpSocket, serverSocket;
-	struct sockaddr_in server, client;
-	int addrLen = sizeof(sAddr);
+IO::IO(int _port)
+{
+#ifdef _WIN32
+	myport = _port;
 
+	addrLen = sizeof(sAddr);
+	tmpRet = WSAStartup(MAKEWORD(2, 2), &wData);
 
-
-	int tmpRet = WSAStartup(MAKEWORD(2, 2), &wData);
-	if (tmpRet != 0)
-	{
-		errorBox((char*)"WSA Had an Error (Mark 1)");
-		exit(1);
+	if (tmpRet != 0) {
+		errorBox((char*)"WSA Had an error. Mark 1");
+		exit(EXIT_CODE_WSA_ERROR);
 	}
 	tmpSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (tmpSocket == INVALID_SOCKET)
-	{
-		errorBox((char*)"Socket() had an Error (Mark 2)");
-		exit(2);
+
+	if (tmpSocket == INVALID_SOCKET) {
+		errorBox((char*)"Socket Creation had an error. Mark 2");
+		exit(EXIT_CODE_SOCKET_CREATION_ERROR);
 	}
+	tmpRet = bind(tmpSocket, (struct sockaddr*)&server, sizeof(server));
 
+	
 
-	/* Fill our server structure */
 	memset(&server, sizeof(server), 0);
 	server.sin_addr.s_addr = INADDR_ANY;
 	server.sin_family = AF_INET;
 	server.sin_port = htons(myport);
 	printf("Using port %d\n", myport);
 
+	
 
-
-	/* Set up the actual socket (bind and listen) */
 	tmpRet = bind(tmpSocket, (struct sockaddr*)&server, sizeof(server));
+	
 	if (tmpRet == SOCKET_ERROR)
 	{
 		errorBox((char*)"Bind() has an Error (Mark 3)");
 		exit(3);
-	}
+}
 	tmpRet = listen(tmpSocket, 1);
 	if (tmpRet == SOCKET_ERROR)
 	{
@@ -101,7 +111,22 @@ void test() {
 	}
 	printf("Binded and listening on port %d\nWaiting for a client to connect...\r\n", myport);
 	/* Simple connection loop awaiting a client to connect. */
+
 	serverSocket = SOCKET_ERROR;
+
+#elif __linux__
+
+
+#endif 
+
+
+	
+}
+
+void IO::loop() {
+
+
+#ifdef _WIN32
 	do
 	{
 		serverSocket = accept(tmpSocket, (sockaddr*)&sAddr, &addrLen);
@@ -109,17 +134,17 @@ void test() {
 		{
 			/* New client has connected process them! */
 			 //CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)processClient, (void*)serverSocket, NULL, NULL);
-			std::thread t(processClient, serverSocket);
+			std::thread t(&ClientSocket::processClient,new ClientSocket(), serverSocket, sAddr,cnum);
 			t.detach();
 			cnum++;
 		}
-	} while (true);
-	getchar();
+} while (true);
+#elif __linux__
+
+#endif
 }
 
-int main() {
-	SetConsoleTitleA("HasherDB");
-	IO io(27015);
-	io.loop();
-	return 0;
+
+IO::~IO()
+{
 }
