@@ -26,11 +26,11 @@ class ClientSocket {
 public:
 	void processClient(
 #ifdef _WIN32
-		SOCKET passdata, SOCKADDR_IN sAddr
+		SOCKET passdata, SOCKADDR_IN sAddr,
 #elif __linux__
 
 #endif 
-	, int cnum);
+	 int cnum);
 
 
 	ClientSocket();
