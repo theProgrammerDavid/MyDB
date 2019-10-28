@@ -1,5 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
-
 #pragma comment (lib, "ws2_32.lib")
 
 #include "pch.h"
@@ -44,7 +42,7 @@ void processClient(SOCKET passdata)
 		/* Every five seconds send a ping to the client... */
 		if (sret == ECONNRESET || sret == SOCKET_ERROR)
 		{
-			cnum -= 1;
+			cnum--;
 			printf("Client from %s has disconnected...\nThere's now %d clients connected...\n", inet_ntoa(sAddr.sin_addr), cnum);
 			closesocket(tClient);
 			break;

@@ -1,12 +1,86 @@
 #pragma once
 
+#ifndef TABLE_H
+#define TABLE_H
+
+
 #include "Protocol.h"
 #include <string>
+#include <vector>
+#include <iostream>
+#include "ext/json.hpp"
+#include "ext/picosha2.h"
+
+#define MAX_ROW_SIZE 100
+
+typedef unsigned short int VSINT;
+using json = nlohmann::json;
+
+int primaryHashFunction(std::string s);
+int secondaryHashFunction(std::string s);
+
+enum bg{A,B,AB,O};
+enum sex { M, F };;
+
+class Element {
+public:
+
+	std::string name;
+	std::string pswd;
+	int blood_group;
+	std::string phoneNo;
+	std::string donorName;
+	std::string donorFather;
+	std::string transferDate;
+	int age;
+	int sex;
+	
+	Element();
+	Element(std::string n,std::string pass, std::string phone,
+		std::string dname, std::string dfather, std::string tdate,
+		int _bg, int _age, int _sex);
+
+};
+
+class Field {
+
+public:
+	std::vector< Element> vec;
+	int noOfChains;
+
+	Field();
+	Element getElement(int );
+};
+
 
 class Table
 {
 public:
+
+	Field row[MAX_ROW_SIZE];
+
+	void ReadProtocol(json j);
+
 	Table();
 	~Table();
+
+	void registerSchema(json j);
+	
+	void addEntry(json j);
+	void addEntryCheckup(json j);
+	json findAll(json j);
+	json findOne(json j);
+	void deleteEntry(json j);
+	void findOneAndUpdate(json j);
+	void findAllAndUpdate(json j);
+
+private:
+	
 };
+
+
+
+
+#endif // !TABLE_H
+
 

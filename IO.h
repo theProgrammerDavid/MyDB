@@ -1,12 +1,19 @@
 #pragma once
 
+#ifndef IO_H
+#define IO_H
+
+
 #include <stdio.h>
 #include <iostream>
+#include "ext/json.hpp"
 #include "Authenticator.h"
 #ifdef _WIN32
 
 #include <Windows.h>
 #include <thread>
+#include "Table.h"
+
 #elif __linux__
 
 #endif // _WIN32
@@ -21,6 +28,9 @@
 #define EXIT_CODE_BIND_ERROR 003
 #define EXIT_CODE_LISTEN_ERROR 004
 
+using json = nlohmann::json;
+static Table TABLE;
+
 class ClientSocket {
 
 public:
@@ -30,13 +40,16 @@ public:
 #elif __linux__
 
 #endif 
-	 int cnum);
+		int cnum);
+
+
 
 
 	ClientSocket();
-private:
-	SOCKET _client;
 
+private:
+
+	SOCKET _client;
 	char recvbuf[MAX_RECVBUF_SIZE];
 	char connectionMSG[MAX_CONNECTION_MESSAGE_SIZE];
 	char sendmsg[MAX_SEND_MESSAGE];
@@ -50,7 +63,7 @@ class IO
 
 private:
 #ifdef _WIN32
-	
+
 	SOCKADDR_IN sAddr;
 	sockaddr_in server, client;
 	WSADATA wData;
@@ -63,12 +76,12 @@ private:
 	int myport;
 	int addrLen;
 	int tmpRet;
-	
+
 #elif __linux__
 
 
 #endif
-	
+
 public:
 
 	void errorBox(char *text);
@@ -76,4 +89,8 @@ public:
 	IO(int _port);
 	~IO();
 };
+
+
+
+#endif
 

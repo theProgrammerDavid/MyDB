@@ -30,32 +30,32 @@ var x = {
     pass: 'lol'
 }
 var client = new net.Socket();
-const readline = require('readline');
+// const readline = require('readline');
 
 
-client.connect(27015, '127.0.0.1', function () {
-    console.log('Connected');
+// client.connect(27015, '127.0.0.1', function () {
+//     console.log('Connected');
 
 
-});
-console.log(JSON.stringify({
-    username: 'david',
-}))
+// });
+// console.log(JSON.stringify({
+//     username: 'david',
+// }))
 
-client.on('close', function () {
-    console.log('Connection closed');
-});
-
-
-// client.write(JSON.stringify({
-//     username:'david',
-// }));
+// client.on('close', function () {
+//     console.log('Connection closed');
+// });
 
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+// // client.write(JSON.stringify({
+// //     username:'david',
+// // }));
+
+
+// const rl = readline.createInterface({
+//     input: process.stdin,
+//     output: process.stdout
+// });
 
 
 client.on('data', function (data) {
@@ -64,13 +64,34 @@ client.on('data', function (data) {
 });
 
 
-while (true) {
-    rl.question('$> ', (answer) => {
-        // TODO: Log the answer in a database
-        client.write(answer.toString().trim());
-    });
+function HDBSetup() {
+    client.connect(27015, '127.0.0.1', function () {
+        console.log('Connected');
 
+        client.on('close', function () {
+            console.log('Connection closed');
+        });
+
+
+        client.on('data', function (data) {
+            console.log('Received: ' + data);
+            //client.destroy(); // kill client after server's response
+        });
+
+
+
+    });
 }
+
+
+
+// while (true) {
+//     rl.question('$> ', (answer) => {
+//         // TODO: Log the answer in a database
+//         client.write(answer.toString().trim());
+//     });
+
+// }
 
 // stdin.addListener("data", function(d){
 //    // console.log('you entered: '+d.toString().trim());

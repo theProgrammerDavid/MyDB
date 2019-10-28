@@ -158,11 +158,11 @@
   <ItemGroup>
     <ClInclude Include="Authenticator.h" />
     <ClInclude Include="ext\json.hpp" />
+    <ClInclude Include="ext\picosha2.h" />
     <ClInclude Include="IO.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Protocol.h" />
     <ClInclude Include="Table.h" />
-    <ClInclude Include="tableRow.h" />
     <ClInclude Include="Task.h" />
   </ItemGroup>
   <ItemGroup>
@@ -176,7 +176,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Table.cpp" />
-    <ClCompile Include="tableRow.cpp" />
     <ClCompile Include="Task.cpp" />
   </ItemGroup>
   <ItemGroup>

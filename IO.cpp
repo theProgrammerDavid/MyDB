@@ -15,6 +15,8 @@ void ClientSocket:: processClient(
 	,int cnum
 ) {
 
+	json j;
+
 #ifdef _WIN32
 	//int iResult;
 
@@ -38,6 +40,16 @@ void ClientSocket:: processClient(
 
 		iResult = recv(tClient, recvbuf, sizeof(recvbuf), 0);
 		std::cout << "received: " << recvbuf << "|"<<std::endl;
+		//std::string str = recvbuf;
+		j = json::parse(recvbuf);
+		
+		//std::cout << j.dump(4) << std::endl;
+		//std::cout << j["type"] << std::endl;
+		
+		std::cout << "before\n";
+		TABLE.ReadProtocol(j);
+		std::cout << "after\n";
+
 		sret = send(tClient, recvbuf, sizeof(recvbuf), 0);
 		/* Every five seconds send a ping to the client... */
 		if (sret == ECONNRESET || sret == SOCKET_ERROR)
@@ -119,7 +131,7 @@ IO::IO(int _port)
 
 #endif 
 
-
+	 
 	
 }
 
