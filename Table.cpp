@@ -91,7 +91,9 @@ void Table::registerSchema(json j) {
 }
 
 void Table::addEntry(json j) {
-	std::cout << "adding entry" <<std::endl;;
+	std::cout << "adding entry" <<std::endl;
+	Element e;
+	
 }
 
 void Table::addEntryCheckup(json j) {

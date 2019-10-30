@@ -22,39 +22,34 @@ module.exports = {
 
 }
 
-function registerSchema(_schema) {
-    client.write(JSON.stringify({schema:_schema, protocol:99}));
+function addEntry( value) {
+    client.write(JSON.stringify({ val: value, protocol: 100 }));
 }
 
-
-function addEntry(rowNumber, value) {
-    client.write(JSON.stringify({ index: rowNumber, val: value, protocol: 100 }));
+function addEntryCheckDup( value) {
+    client.write(JSON.stringify({ val: value, protocol: 102 }));
 }
 
-function addEntryCheckDup(rowNumber, value) {
-    client.write(JSON.stringify({ index: rowNumber, val: value, protocol: 102 }));
+function findAll( phoneNo) {
+    client.write(JSON.stringify({clue: phoneNo, protocol: 200 }));
 }
 
-function findAll(rowNumber, partialSearchValue) {
-    client.write(JSON.stringify({ index: rowNumber, clue: partialSearchValue, protocol: 200 }));
-}
-
-function findOne(rowNumber, partialSearchValue) {
-    client.write(JSON.stringify({ index: rowNumber, clue: partialSearchValue, protocol: 201 }));
+function findOne(phoneNo) {
+    client.write(JSON.stringify({  clue: phoneNo, protocol: 201 }));
 }
 
 
 
-function deleteEntry(rowNumber, partialSearchValue) {
-    client.write(JSON.stringify({ index: rowNumber, clue: partialSearchValue, protocol: 402 }));
+function deleteEntry(phoneNo) {
+    client.write(JSON.stringify({clue: phoneNo, protocol: 402 }));
 }
 
 //add the modify stuff
 
-function findOneAndUpdate(rowNumber, partialSearchValue){
-    client.write(JSON.stringify({ index: rowNumber, clue: partialSearchValue, protocol: 301 }));
+function findOneAndUpdate(phoneNo){
+    client.write(JSON.stringify({ clue: phoneNo, protocol: 301 }));
 }
 
-function findAllAndUpdate(){
-    client.write(JSON.stringify({ index: rowNumber, clue: partialSearchValue, protocol: 300 }));
+function findAllAndUpdate(phoneNo){
+    client.write(JSON.stringify({ clue: phoneNo, protocol: 300 }));
 }

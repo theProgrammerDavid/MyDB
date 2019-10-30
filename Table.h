@@ -13,7 +13,6 @@
 
 #define MAX_ROW_SIZE 100
 
-typedef unsigned short int VSINT;
 using json = nlohmann::json;
 
 int primaryHashFunction(std::string s);
