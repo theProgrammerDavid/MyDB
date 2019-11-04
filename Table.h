@@ -58,23 +58,25 @@ public:
 
 	Field row[MAX_ROW_SIZE];
 
-	void ReadProtocol(json j);
+	json ReadProtocol(json j);
 
 	Table();
 	~Table();
 
 	void registerSchema(json j);
 	
-	void addEntry(json j);
-	void addEntryCheckup(json j);
+	json addEntry(json j);
+	json addEntryCheckup(json j);
 	json findAll(json j);
 	json findOne(json j);
-	void deleteEntry(json j);
-	void findOneAndUpdate(json j);
-	void findAllAndUpdate(json j);
+	json deleteEntry(json j);
+	json findOneAndUpdate(json j);
+	json findAllAndUpdate(json j);
 
 private:
-	
+	bool copyExists(std::vector<Element>vec, Element e);
+	void fillObj(json j, Element *e);
+	void filljson(json &j, Element e);
 };
 
 
