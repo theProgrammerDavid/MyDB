@@ -324,8 +324,39 @@ json Table::deleteEntry(json j) {
 	return resp;
 }
 
+/*
+JSON structure:
+
+var person = {
+	name: "David",
+	pswd: "password",
+	blood_group: "B",
+	phoneNo: "9922395178",
+	donorName: "John",
+	donorFather: "Jack",
+	transferDate: "22Jan2000",
+	age: 22,
+	sex: 'M',
+
+
+	function findOneAndUpdate(phoneNo, newData) {
+	client.write(JSON.stringify({ val: { phoneNo: phoneNo, data: newData }, protocol: 301 }));
+}
+
+}
+*/
+
 json Table::findOneAndUpdate(json j) {
 	std::string phno = j["phoneNo"].dump();
+	
+	//not sure if this works or doesnt
+	json newData = j["data"];
+
+	/*
+	1. locate the record that has to be updated
+	2. extract the values from the json and update the record with it
+	*/
+
 	std::cout << "string is " << phno << std::endl;
 	Element e;
 	json resp;
