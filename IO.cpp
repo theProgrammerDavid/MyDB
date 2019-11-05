@@ -98,7 +98,7 @@ IO::IO(int _port)
 		errorBox((char*)"Socket Creation had an error. Mark 2");
 		exit(EXIT_CODE_SOCKET_CREATION_ERROR);
 	}
-	tmpRet = bind(tmpSocket, (struct sockaddr*)&server, sizeof(server));
+	//tmpRet = bind(tmpSocket, (struct sockaddr*)&server, sizeof(server));
 
 	
 
@@ -123,7 +123,7 @@ IO::IO(int _port)
 		errorBox((char*)"Listen() has an Error (Mark 4)");
 		exit(4);
 	}
-	printf("Binded and listening on port %d\nWaiting for a client to connect...\r\n", myport);
+	printf("Binded and listening on port %d\nwaiting for a client to connect...\r\n", myport);
 	/* Simple connection loop awaiting a client to connect. */
 
 	serverSocket = SOCKET_ERROR;
@@ -146,6 +146,7 @@ void IO::loop() {
 		serverSocket = accept(tmpSocket, (sockaddr*)&sAddr, &addrLen);
 		if (serverSocket != SOCKET_ERROR)
 		{
+			
 			/* New client has connected process them! */
 			 //CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)processClient, (void*)serverSocket, NULL, NULL);
 			std::thread t(&ClientSocket::processClient,new ClientSocket(), serverSocket, sAddr,cnum);

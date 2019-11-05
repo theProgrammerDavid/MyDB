@@ -1,5 +1,7 @@
 #pragma once
 
+#define COMMIT						0
+#define READ_DISK					-1
 #define TABLE_MODE_EDIT				1
 #define TABLE_MODE_CONST			2
 #define TABLE_MODE_RAM				3

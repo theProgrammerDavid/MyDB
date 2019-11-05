@@ -4,6 +4,7 @@
 
 Table::Table()
 {
+	
 }
 
 
@@ -45,7 +46,7 @@ int primaryHashFunction(std::string s) {
 		asc = s[i] > 96 ? s[i] - 96 : s[i] - 64;
 		hashVal = (hashVal * 32 + asc) % MAX_ROW_SIZE;
 	}
-	return hashVal;
+	return (int)abs(hashVal);
 
 }
 
@@ -53,6 +54,34 @@ int  secondaryHashFunction(std::string s) {
 	return 0;
 }
 
+json Table::readFromDisk() {
+	json j;
+	
+	std::string block;
+	std::ifstream info(".\\data\\info.txt");
+	int rownum, count;
+
+	while (info>>rownum>>count) {
+		block.clear();
+		block = "block_";
+		block += std::to_string(rownum);
+		block += ".dat";
+
+		std::cout << block << std::endl;
+		std::cout << "count is :" << count << std::endl;
+		std::cout << "element is :" << sizeof(Element)<< std::endl;
+		std::ifstream fin(block.c_str(), std::ios::binary | std::ios::in);
+		
+		fin.read((char*)&row[rownum].vec[0], sizeof(Element)*count);
+		std::cout << "num is " << row[rownum].vec[0].phoneNo << std::endl;
+		fin.close();
+	}
+
+	info.close();
+
+	j["status"] = "OK";
+	return j;
+}
 
 json Table::ReadProtocol(json j) {
 
@@ -87,6 +116,14 @@ json Table::ReadProtocol(json j) {
 		std::cout << "find one and update" << std::endl;
 		ret = findOneAndUpdate(j["val"]);
 	}
+	else if (strcmp(p.c_str(), "0") == 0) {
+		std::cout << "commiting to disk" << std::endl;
+		ret = commitToDisk();
+	}
+	else if (strcmp(p.c_str(), "-1") == 0) {
+		//std::cout << "reading from disk" << std::endl;
+		ret = readFromDisk();
+	}
 	else if (strcmp(p.c_str(), "300") == 0) {
 		std::cout << "find all and update" << std::endl;
 		ret = findAllAndUpdate(j["val"]);
@@ -97,6 +134,45 @@ json Table::ReadProtocol(json j) {
 
 void Table::registerSchema(json j) {
 
+}
+
+void Table::writeToInfo(int rownum, int rec) {
+	std::ofstream fout(".\\data\\info.txt");
+	fout << rownum << " " << rec << std::endl;
+	fout.close();
+}
+
+json Table::commitToDisk() {
+	std::string blockName;
+	json j;
+
+	for (int i = 0; i < MAX_ROW_SIZE; i++) {
+		
+		blockName.clear();
+		blockName = ".\\data\\block_";
+		blockName += std::to_string(i);
+		blockName += ".dat";
+
+		
+		
+		
+		if (row[i].vec.size() > 0) {
+
+			std::ofstream fout(blockName.c_str(), std::ios::binary |std::ios::out | std::ios::app);
+			std::cout << "\nROW is " << i << std::endl;
+			writeToInfo(i, row[i].vec.size());
+			fout.write((char*)&row[i].vec[0], sizeof(Element)*row[i].vec.size());
+		
+			fout.close();
+		}
+
+		//std::cout << "row " << i << " has size " << row[i].vec.size() << std::endl;
+		
+		
+
+	}
+		j["status"] = "OK";
+		return j;
 }
 
 json Table::addEntry(json j) {
@@ -178,6 +254,7 @@ json Table::findAll(json j) {
 	json fill;
 
 	int pos = primaryHashFunction(phno);
+	std::cout << "pos is " << pos << std::endl;
 	auto scanVec = row[pos].vec;
 
 	if (row[pos].noOfChains == 0) {
@@ -249,13 +326,14 @@ json Table::deleteEntry(json j) {
 
 json Table::findOneAndUpdate(json j) {
 	std::string phno = j["phoneNo"].dump();
+	std::cout << "string is " << phno << std::endl;
 	Element e;
 	json resp;
 
-	fillObj(j, &e);
+	//fillObj(j, &e);
 
-	int pos = primaryHashFunction(phno);
-	 row[pos].vec[0]=e;
+	//int pos = primaryHashFunction(phno);
+	// row[pos].vec[0]=e;
 	
 	 resp["status"] = "OK";
 	 return resp;

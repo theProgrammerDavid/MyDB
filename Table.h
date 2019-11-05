@@ -10,6 +10,8 @@
 #include <iostream>
 #include "ext/json.hpp"
 #include "ext/picosha2.h"
+#include <fstream>
+#include <math.h>
 
 #define MAX_ROW_SIZE 100
 
@@ -72,8 +74,11 @@ public:
 	json deleteEntry(json j);
 	json findOneAndUpdate(json j);
 	json findAllAndUpdate(json j);
+	json commitToDisk();
+	json readFromDisk();
 
 private:
+	void writeToInfo(int rownum, int rec);
 	bool copyExists(std::vector<Element>vec, Element e);
 	void fillObj(json j, Element *e);
 	void filljson(json &j, Element e);
