@@ -348,24 +348,14 @@ var person = {
 
 json Table::findOneAndUpdate(json j) {
 	std::string phno = j["phoneNo"].dump();
-	
-	//not sure if this works or doesnt
-	json newData = j["data"];
-
-	/*
-	1. locate the record that has to be updated
-	2. extract the values from the json and update the record with it
-	*/
-
-	std::cout << "string is " << phno << std::endl;
 	Element e;
 	json resp;
 
-	//fillObj(j, &e);
+	fillObj(j, &e);
 
-	//int pos = primaryHashFunction(phno);
-	// row[pos].vec[0]=e;
-	
+	int pos = primaryHashFunction(phno);
+	row[pos].vec[0]=e;
+
 	 resp["status"] = "OK";
 	 return resp;
 }
