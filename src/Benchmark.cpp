@@ -25,11 +25,14 @@ RaiiTimer::RaiiTimer()
 CallbackTimer::CallbackTimer()
 {
 }
-void CallbackTimer::Benchmark(std::function<void()> callback)
+template <class T>
+T CallbackTimer::Benchmark(std::function<T> callback)
 {
     this->Start();
-    callback();
+    auto r=callback();
     this->Stop();
+
+    return r;
 }
 
 void CallbackTimer::Start()

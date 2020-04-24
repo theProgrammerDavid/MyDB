@@ -26,7 +26,8 @@ private:
     void Stop();
 public:
     CallbackTimer();
-    void Benchmark(std::function<void()> callback);
+    template <class T>
+    T Benchmark(std::function<T> callback);
 };
 
 #endif
