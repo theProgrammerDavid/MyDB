@@ -1,5 +1,5 @@
-#ifndef PROTOCOL_H
-#define PROTOCOL_H
+#ifndef MYDB_PROTOCOL_H
+#define MYDB_PROTOCOL_H
 
 #include <cstdint>
 
