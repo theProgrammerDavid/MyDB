@@ -3,20 +3,30 @@
 
 #include <chrono>
 #include <iostream>
+#include <functional>
 
-class RaiiTimer {
+class RaiiTimer
+{
 
 private:
-	std::chrono::time_point<std::chrono::high_resolution_clock>m_StartTimePoint;
+    std::chrono::time_point<std::chrono::high_resolution_clock> m_StartTimePoint;
 
 public:
+    void Stop();
+    ~RaiiTimer();
+    RaiiTimer();
+};
 
+class CallbackTimer
+{
+private:
+    std::chrono::time_point<std::chrono::high_resolution_clock> m_StartTimePoint;
 
-	void Stop();
-
-	~RaiiTimer();
-
-	RaiiTimer();
+    void Start();
+    void Stop();
+public:
+    CallbackTimer();
+    void Benchmark(std::function<void()> callback);
 };
 
 #endif
