@@ -83,7 +83,7 @@ json Table::readFromDisk() {
 	return j;
 }
 
-json Table::ReadProtocol(json j) {
+json Table::ReadProtocol(json &j) {
 
 	std::string p = j["protocol"].dump();
 	json ret;
@@ -136,7 +136,7 @@ void Table::registerSchema(json j) {
 
 }
 
-void Table::writeToInfo(int rownum, int rec) {
+void Table::writeToInfo(size_t rownum, size_t rec) {
 	std::ofstream fout(".\\data\\info.txt");
 	fout << rownum << " " << rec << std::endl;
 	fout.close();
@@ -146,7 +146,7 @@ json Table::commitToDisk() {
 	std::string blockName;
 	json j;
 
-	for (int i = 0; i < MAX_ROW_SIZE; i++) {
+	for (size_t i = 0; i < MAX_ROW_SIZE; i++) {
 		
 		blockName.clear();
 		blockName = ".\\data\\block_";

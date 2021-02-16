@@ -60,7 +60,7 @@ public:
 
 	Field row[MAX_ROW_SIZE];
 
-	json ReadProtocol(json j);
+	json ReadProtocol(json &j);
 
 	Table();
 	~Table();
@@ -78,7 +78,7 @@ public:
 	json readFromDisk();
 
 private:
-	void writeToInfo(int rownum, int rec);
+	void writeToInfo(size_t rownum, size_t rec);
 	bool copyExists(std::vector<Element>vec, Element e);
 	void fillObj(json j, Element *e);
 	void filljson(json &j, Element e);

@@ -7,18 +7,12 @@ ClientSocket::ClientSocket() {
 
 
 void ClientSocket:: processClient(
-#ifdef _WIN32
 	SOCKET passdata, SOCKADDR_IN sAddr
-#elif __linux__
-
-#endif
 	,int cnum
 ) {
 
 	json j;
 	json ret;
-
-#ifdef _WIN32
 	//int iResult;
 
 	cnum++;
@@ -63,26 +57,16 @@ void ClientSocket:: processClient(
 		}
 		//Sleep(5000);
 	}
-#elif __linux__
-
-#endif
-
 
 }
 void IO::errorBox(char * text)
 {
-
-#ifdef _WIN32
 	MessageBoxA(NULL, text, "ERROR", MB_OK | MB_ICONERROR);
-#elif __linux__
-
-#endif // _WIN32
-
 }
 
 IO::IO(int _port)
 {
-#ifdef _WIN32
+
 	myport = _port;
 
 	addrLen = sizeof(sAddr);
@@ -127,20 +111,11 @@ IO::IO(int _port)
 	/* Simple connection loop awaiting a client to connect. */
 
 	serverSocket = SOCKET_ERROR;
-
-#elif __linux__
-
-
-#endif 
-
-	 
 	
 }
 
 void IO::loop() {
 
-
-#ifdef _WIN32
 	do
 	{
 		serverSocket = accept(tmpSocket, (sockaddr*)&sAddr, &addrLen);
@@ -154,9 +129,7 @@ void IO::loop() {
 			cnum++;
 		}
 } while (true);
-#elif __linux__
 
-#endif
 }
 
 
