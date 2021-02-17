@@ -8,15 +8,9 @@
 #include <iostream>
 #include "ext/json.hpp"
 #include "Authenticator.h"
-#ifdef _WIN32
-
 #include <Windows.h>
 #include <thread>
 #include "Table.h"
-
-#elif __linux__
-
-#endif // _WIN32
 
 #define MAX_RECVBUF_SIZE 512
 #define MAX_CONNECTION_MESSAGE_SIZE 64
@@ -34,16 +28,7 @@ static Table TABLE;
 class ClientSocket {
 
 public:
-	void processClient(
-#ifdef _WIN32
-		SOCKET passdata, SOCKADDR_IN sAddr,
-#elif __linux__
-
-#endif 
-		int cnum);
-
-
-
+	void processClient(SOCKET passdata, SOCKADDR_IN sAddr,int cnum);
 
 	ClientSocket();
 
@@ -62,8 +47,6 @@ class IO
 {
 
 private:
-#ifdef _WIN32
-
 	SOCKADDR_IN sAddr;
 	sockaddr_in server, client;
 	WSADATA wData;
@@ -76,11 +59,6 @@ private:
 	int myport;
 	int addrLen;
 	int tmpRet;
-
-#elif __linux__
-
-
-#endif
 
 public:
 

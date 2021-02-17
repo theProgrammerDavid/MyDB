@@ -152,9 +152,6 @@ json Table::commitToDisk() {
 		blockName = ".\\data\\block_";
 		blockName += std::to_string(i);
 		blockName += ".dat";
-
-		
-		
 		
 		if (row[i].vec.size() > 0) {
 
@@ -165,11 +162,6 @@ json Table::commitToDisk() {
 		
 			fout.close();
 		}
-
-		//std::cout << "row " << i << " has size " << row[i].vec.size() << std::endl;
-		
-		
-
 	}
 		j["status"] = "OK";
 		return j;
@@ -273,9 +265,6 @@ json Table::findAll(json j) {
 }
 
 void Table::filljson(json &j, Element e) {
-
-
-
 	j["name"] = e.name;
 	j["pswd"] = e.pswd;
 	j["blood_group"] = e.blood_group;
@@ -323,28 +312,6 @@ json Table::deleteEntry(json j) {
 	}
 	return resp;
 }
-
-/*
-JSON structure:
-
-var person = {
-	name: "David",
-	pswd: "password",
-	blood_group: "B",
-	phoneNo: "9922395178",
-	donorName: "John",
-	donorFather: "Jack",
-	transferDate: "22Jan2000",
-	age: 22,
-	sex: 'M',
-
-
-	function findOneAndUpdate(phoneNo, newData) {
-	client.write(JSON.stringify({ val: { phoneNo: phoneNo, data: newData }, protocol: 301 }));
-}
-
-}
-*/
 
 json Table::findOneAndUpdate(json j) {
 	std::string phno = j["phoneNo"].dump();

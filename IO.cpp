@@ -6,10 +6,7 @@ ClientSocket::ClientSocket() {
 }
 
 
-void ClientSocket:: processClient(
-	SOCKET passdata, SOCKADDR_IN sAddr
-	,int cnum
-) {
+void ClientSocket:: processClient(SOCKET passdata, SOCKADDR_IN sAddr,int cnum) {
 
 	json j;
 	json ret;
