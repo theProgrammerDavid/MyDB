@@ -83,7 +83,7 @@ json Table::readFromDisk() {
 	return j;
 }
 
-json Table::ReadProtocol(json &j) {
+json Table::ReadProtocol(json&& j) {
 
 	std::string p = j["protocol"].dump();
 	json ret;
@@ -132,7 +132,7 @@ json Table::ReadProtocol(json &j) {
 	return ret;
 }
 
-void Table::registerSchema(json j) {
+void Table::registerSchema(json& j) {
 
 }
 
@@ -167,7 +167,7 @@ json Table::commitToDisk() {
 		return j;
 }
 
-json Table::addEntry(json j) {
+json Table::addEntry(json& j) {
 	std::cout << "adding entry" <<std::endl;
 	Element e;
 	json resp;
@@ -181,7 +181,7 @@ json Table::addEntry(json j) {
 	return resp;
 }
 
-json Table::addEntryCheckup(json j) {
+json Table::addEntryCheckup(json& j) {
 	std::cout << "\nadding entry with check\n" << std::endl;
 	Element e;
 	fillObj(j, &e);
@@ -212,7 +212,7 @@ json Table::addEntryCheckup(json j) {
 
 	return resp;
 }
-void Table::fillObj(json j, Element *e) {
+void Table::fillObj(json& j, Element *e) {
 	
 	e->name = j["name"].dump();
 	e->pswd = j["pswd"].dump();
@@ -238,7 +238,7 @@ bool Table::copyExists(std::vector<Element> vec, Element e) {
 	return exists;
 }
 
-json Table::findAll(json j) {
+json Table::findAll(json& j) {
 	
 	std::string phno = j["phoneNo"].dump();
 	Element e;
@@ -276,7 +276,7 @@ void Table::filljson(json &j, Element e) {
 	j["sex"] = e.sex;
 }
 
-json Table::findOne(json j) {
+json Table::findOne(json& j) {
 	
 	std::string phno = j["phoneNo"].dump();
 	Element e;
@@ -297,7 +297,7 @@ json Table::findOne(json j) {
 }
 
 
-json Table::deleteEntry(json j) {
+json Table::deleteEntry(json& j) {
 	std::string phno = j["phoneNo"].dump();
 	Element e;
 	json resp;
@@ -313,7 +313,7 @@ json Table::deleteEntry(json j) {
 	return resp;
 }
 
-json Table::findOneAndUpdate(json j) {
+json Table::findOneAndUpdate(json& j) {
 	std::string phno = j["phoneNo"].dump();
 	Element e;
 	json resp;
@@ -327,7 +327,7 @@ json Table::findOneAndUpdate(json j) {
 	 return resp;
 }
 
-json Table::findAllAndUpdate(json j) {
+json Table::findAllAndUpdate(json& j) {
 	std::string phno = j["phoneNo"].dump();
 	Element e;
 	json resp;

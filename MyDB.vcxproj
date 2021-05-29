@@ -159,7 +159,6 @@
     <ClInclude Include="Authenticator.h" />
     <ClInclude Include="ext\json.hpp" />
     <ClInclude Include="ext\picosha2.h" />
-    <ClInclude Include="IO.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Protocol.h" />
     <ClInclude Include="Table.h" />
@@ -167,7 +166,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Authenticator.cpp" />
-    <ClCompile Include="IO.cpp" />
     <ClCompile Include="MyDB.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

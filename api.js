@@ -1,6 +1,66 @@
 var net = require('net');
-var client = new net.Socket();
+//var client = new net.Socket();
 
+class HasherDB{
+    client;
+    host = '127.0.0.1';
+    port = 27015;
+    constructor(host='127.0.0.1',port=27015){
+        this.host = host;
+        this.port = port;
+        this.client = new net.Socket();
+
+        try{
+            this.client.connect(27015, '127.0.0.1', function () {
+                console.log('Connected');
+    
+            });
+            this.client.on('close', function () {
+                console.log('Connection closed');
+                this.client.destroy();
+            });
+            this.client.on('data', function (data) {
+                console.log('Received: ' + data + '-');
+                //client.destroy(); // kill client after server's response
+            });
+            
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
+
+    /*
+    connect(host='127.0.0.1',port=27015){
+        this.host = host;
+        this.port = port;
+        try{
+            this.client.connect(27015, '127.0.0.1', function () {
+                console.log('Connected');
+    
+            });
+            this.client.on('close', function () {
+                console.log('Connection closed');
+                this.client.destroy();
+            });
+            this.client.on('data', function (data) {
+                console.log('Received: ' + data + '-');
+                //client.destroy(); // kill client after server's response
+            });
+            
+        }
+        catch(e){
+            console.log(e);
+        }
+        
+    }
+    */
+   close(){
+       this.client.destroy();
+   }
+}
+module.exports = HasherDB;
+/*
 function connectClient() {
     client.connect(27015, '127.0.0.1', function () {
         console.log('Connected');
@@ -10,9 +70,14 @@ function connectClient() {
 }
 
 function setupClient() {
+    client = undefined;
+    client = new net.Socket();
     client.connect(27015, '127.0.0.1', function () {
         console.log('Connected');
-
+    });
+    client.on('close', function () {
+        console.log('Connection closed');
+        
     });
 
     client.on('data', function (data) {
@@ -66,6 +131,11 @@ var person2 = {
     sex: 'M',
 }
 
+function close(){
+    client.write('exit');
+    client.destroy();
+}
+
 function readFromDisk() {
     client.write(JSON.stringify({ protocol: -1 }));
 }
@@ -103,3 +173,5 @@ function findOneAndUpdate(phoneNo, newData) {
 function findAllAndUpdate(phoneNo, newData) {
     client.write(JSON.stringify({ val: { phoneNo: phoneNo, data: newData }, protocol: 300 }));
 }
+
+*/

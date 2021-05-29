@@ -33,9 +33,6 @@
     <ClInclude Include="Table.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IO.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ext\picosha2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -54,9 +51,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Table.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

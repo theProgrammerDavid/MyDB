@@ -6,14 +6,10 @@
 #include <iostream>
 #include <thread>
 #include <Windows.h>
-#include "IO.h"
 
 int cnum = 0;
 int myport;
 SOCKADDR_IN sAddr;
-
-
-
 
 void errorBox(char *text)
 {
@@ -41,15 +37,21 @@ void processClient(SOCKET passdata)
 			memset(&recvbuf[0], 0, sizeof(recvbuf));
 			iResult = recv(tClient, recvbuf, sizeof(recvbuf), 0);
 			std::cout << "received: " << recvbuf <<'|'<< '\n';
-			sret = send(tClient, recvbuf, sizeof(recvbuf), 0);
 			
-			json j = json::parse(recvbuf);
-			json ret = TABLE.ReadProtocol(j);
-			
-			const char* s = ret.dump(1).c_str();
-			std::cout << "returning buffer with size " << strlen(s) << "with data " << s << "\n";
+			if (strcmp(recvbuf, "exit") == 0) {
+				const char* s = "Disconnected from Server";
+				send(tClient, s, strlen(s), 0);
+				cnum--;
+				closesocket(tClient);
+				break;
+			}
 
-			/* Every five seconds send a ping to the client... */
+			json ret = TABLE.ReadProtocol(json::parse(recvbuf));
+			
+			std::string s = ret.dump(1);
+			std::cout << "returning buffer with size " << s.length() << "with data " << s << "\n";
+			sret = send(tClient, s.c_str(), s.length(), 0);
+			
 			if (sret == ECONNRESET || sret == SOCKET_ERROR)
 			{
 				cnum--;
@@ -59,16 +61,19 @@ void processClient(SOCKET passdata)
 			}
 		}
 		catch (const std::exception& e) {
-			std::cout << "exception occured here1";
-			std::cout << e.what();
-			std::cout << "Client Disconnected";
-			return;
+			//std::cout << "exception occured here1";
+			//std::cout << e.what();
+			//std::cout << "Client Disconnected";
+			cnum--;
+			closesocket(tClient);
+			break;
 		}
 		//Sleep(5000);
 	}
+	std::cout << "Client " << cnum << " disconnected ";
 }
 
-void test() {
+void loop() {
 	printf("What port: ");
 	scanf("%d", &myport);
 	WSADATA wData;
@@ -143,8 +148,6 @@ void test() {
 
 int main() {
 	SetConsoleTitleA("HasherDB");
-	//IO io(27015);
-	//io.loop();
-	test();
+	loop();
 	return 0;
 }

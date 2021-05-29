@@ -12,3 +12,8 @@
 // TODO: add headers that you want to pre-compile here
 
 #endif //PCH_H
+#include "Table.h"
+#include "ext/json.hpp"
+
+using json = nlohmann::json;
+static Table TABLE;
