@@ -22,30 +22,47 @@ void errorBox(char *text)
 
 void processClient(SOCKET passdata)
 {
+	int mynumber = cnum;
+	int sret;
 	int iResult;
 	char recvbuf[512];
-	memset(recvbuf, NULL, sizeof(recvbuf));
-	int mynumber = cnum;
 	SOCKET tClient = (SOCKET)passdata;
-	char connectionMSG[52];
-	printf(connectionMSG, sizeof(connectionMSG), "Client connected from: %s", inet_ntoa(sAddr.sin_addr));
-	printf("Alert: %s\nClients Connected: %d\n", connectionMSG, cnum);
-	char sendmsg[50];
-	printf(sendmsg, 50, "PING: Your Client Number is: %d\n", mynumber);
-	int sret;
+	//json j,ret;
+	memset(recvbuf, NULL, sizeof(recvbuf));
+	
+	printf("Client connected from: %s", inet_ntoa(sAddr.sin_addr));
+	printf("\nClients Connected: %d\n", cnum);
+	printf("PING: Your Client Number is: %d\n", mynumber);
+
 	while (true)
 	{
 
-		iResult = recv(tClient, recvbuf, sizeof(recvbuf), 0);
-		std::cout << "received: " << recvbuf << std::endl;
-		sret = send(tClient, recvbuf, sizeof(recvbuf), 0);
-		/* Every five seconds send a ping to the client... */
-		if (sret == ECONNRESET || sret == SOCKET_ERROR)
-		{
-			cnum--;
-			printf("Client from %s has disconnected...\nThere's now %d clients connected...\n", inet_ntoa(sAddr.sin_addr), cnum);
-			closesocket(tClient);
-			break;
+		try {
+			memset(&recvbuf[0], 0, sizeof(recvbuf));
+			iResult = recv(tClient, recvbuf, sizeof(recvbuf), 0);
+			std::cout << "received: " << recvbuf <<'|'<< '\n';
+			sret = send(tClient, recvbuf, sizeof(recvbuf), 0);
+			
+			json j = json::parse(recvbuf);
+			json ret = TABLE.ReadProtocol(j);
+			
+			const char* s = ret.dump(1).c_str();
+			std::cout << "returning buffer with size " << strlen(s) << "with data " << s << "\n";
+
+			/* Every five seconds send a ping to the client... */
+			if (sret == ECONNRESET || sret == SOCKET_ERROR)
+			{
+				cnum--;
+				printf("Client from %s has disconnected...\nThere's now %d clients connected...\n", inet_ntoa(sAddr.sin_addr), cnum);
+				closesocket(tClient);
+				break;
+			}
+		}
+		catch (const std::exception& e) {
+			std::cout << "exception occured here1";
+			std::cout << e.what();
+			std::cout << "Client Disconnected";
+			return;
 		}
 		//Sleep(5000);
 	}
@@ -56,7 +73,7 @@ void test() {
 	scanf("%d", &myport);
 	WSADATA wData;
 	SOCKET tmpSocket, serverSocket;
-	struct sockaddr_in server, client;
+	struct sockaddr_in server;
 	int addrLen = sizeof(sAddr);
 
 
@@ -99,17 +116,26 @@ void test() {
 	}
 	printf("Binded and listening on port %d\nWaiting for a client to connect...\r\n", myport);
 	/* Simple connection loop awaiting a client to connect. */
+	//ClientSocket cs;
 	serverSocket = SOCKET_ERROR;
 	do
 	{
-		serverSocket = accept(tmpSocket, (sockaddr*)&sAddr, &addrLen);
-		if (serverSocket != SOCKET_ERROR)
-		{
-			/* New client has connected process them! */
-			 //CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)processClient, (void*)serverSocket, NULL, NULL);
-			std::thread t(processClient, serverSocket);
-			t.detach();
-			cnum++;
+		try {
+			serverSocket = accept(tmpSocket, (sockaddr*)&sAddr, &addrLen);
+			
+			if (serverSocket != SOCKET_ERROR)
+			{
+				/* New client has connected process them! */
+				// CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)processClient, (void*)serverSocket, NULL, NULL);
+				std::thread t(processClient, serverSocket);
+				t.detach();
+				
+				cnum++;
+			}
+		}
+		catch (const std::exception& e) {
+			std::cout << "exception occured here2";
+			std::cout << e.what();
 		}
 	} while (true);
 	getchar();
@@ -117,7 +143,8 @@ void test() {
 
 int main() {
 	SetConsoleTitleA("HasherDB");
-	IO io(27015);
-	io.loop();
+	//IO io(27015);
+	//io.loop();
+	test();
 	return 0;
 }

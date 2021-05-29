@@ -12,17 +12,21 @@ void ClientSocket:: processClient(SOCKET passdata, SOCKADDR_IN sAddr,int cnum) {
 	json ret;
 	//int iResult;
 
-	cnum++;
+	//cnum++;
 
 	//char recvbuf[512];
 	memset(recvbuf, NULL, sizeof(recvbuf));
 	int mynumber = cnum;
 	SOCKET tClient = (SOCKET)passdata;
 	//char connectionMSG[52];
-	printf(connectionMSG, sizeof(connectionMSG), "Client connected from: %s", inet_ntoa(sAddr.sin_addr));
-	printf("Alert: %s\nClients Connected: %d\n", connectionMSG, cnum);
+	//printf(connectionMSG, sizeof(connectionMSG), "Client connected from: %s", inet_ntoa(sAddr.sin_addr));
+	printf("Client connected from: %s", inet_ntoa(sAddr.sin_addr));
+
+	//printf(connectionMSG, sizeof(connectionMSG),"Alert: %s\nClients Connected: %d\n", connectionMSG, cnum);
+	printf( "\nClients Connected: %d\n", cnum);
+	
 	//char sendmsg[50];
-	printf(sendmsg, 50, "PING: Your Client Number is: %d\n", mynumber);
+	printf("PING: Your Client Number is: %d\n", mynumber);
 	int sret;
 	while (true)
 	{
@@ -112,21 +116,21 @@ IO::IO(int _port)
 }
 
 void IO::loop() {
-
+	this->serverSocket = SOCKET_ERROR;
 	do
 	{
-		serverSocket = accept(tmpSocket, (sockaddr*)&sAddr, &addrLen);
+		this->serverSocket = accept(tmpSocket, (sockaddr*)&sAddr, &addrLen);
 		if (serverSocket != SOCKET_ERROR)
 		{
 			
 			/* New client has connected process them! */
-			 //CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)processClient, (void*)serverSocket, NULL, NULL);
-			std::thread t(&ClientSocket::processClient,new ClientSocket(), serverSocket, sAddr,cnum);
+			 //createThread(NULL, NULL, (LPTHREAD_START_ROUTINE)processClient, (void*)serverSocket, NULL, NULL);
+			std::thread t(&ClientSocket::processClient,new ClientSocket(), serverSocket, sAddr,cnum+1);
 			t.detach();
 			cnum++;
 		}
 } while (true);
-
+getchar();
 }
 
 
